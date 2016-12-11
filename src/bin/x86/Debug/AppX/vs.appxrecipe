@@ -10,7 +10,7 @@
     <PackageArchitecture>x86</PackageArchitecture>
     <PackageIdentityName>ead4078e-faec-435b-9fc0-a17dc96d778e</PackageIdentityName>
     <PackageIdentityPublisher>CN=Kamil Pajdzik</PackageIdentityPublisher>
-    <IntermediateOutputPath>P:\Private\Slideshow\src\Slideshow\obj\x86\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>P:\Private\Slideshow\src\obj\x86\Debug\</IntermediateOutputPath>
     <RemoteDeploymentType>
     </RemoteDeploymentType>
     <PackageRegistrationPath>
@@ -25,16 +25,16 @@
     <JitOptimizationSuppressed>True</JitOptimizationSuppressed>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="P:\Private\Slideshow\src\Slideshow\bin\x86\Debug\Core\AppxManifest.xml">
+    <AppXManifest Include="P:\Private\Slideshow\src\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-12-11T07:06:42.319</Modified>
+      <Modified>2016-12-11T07:09:12.023</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\bin\x86\Debug\Slideshow.exe">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\bin\x86\Debug\Slideshow.exe">
       <PackagePath>entrypoint\Slideshow.exe</PackagePath>
-      <Modified>2016-12-11T07:06:42.099</Modified>
+      <Modified>2016-12-11T07:09:10.798</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Kamil Pajdzik\.nuget\packages\Microsoft.CSharp\4.0.0\lib\netcore50\Microsoft.CSharp.dll">
       <PackagePath>Microsoft.CSharp.dll</PackagePath>
@@ -448,45 +448,45 @@
       <PackagePath>System.Xml.XmlSerializer.dll</PackagePath>
       <Modified>2015-07-23T06:11:12.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Properties\Default.rd.xml">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
       <Modified>2016-12-11T07:04:44.459</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Assets\LockScreenLogo.scale-200.png">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Assets\LockScreenLogo.scale-200.png">
       <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
       <Modified>2015-09-21T01:20:42.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Assets\SplashScreen.scale-200.png">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2015-09-21T01:20:42.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Assets\Square150x150Logo.scale-200.png">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Assets\Square150x150Logo.scale-200.png">
       <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2015-09-21T01:20:42.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Assets\Square44x44Logo.scale-200.png">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Assets\Square44x44Logo.scale-200.png">
       <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2015-09-21T01:20:42.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2015-09-21T01:20:42.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Assets\StoreLogo.png">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2015-09-21T01:20:42.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\Assets\Wide310x150Logo.scale-200.png">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\Assets\Wide310x150Logo.scale-200.png">
       <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
       <Modified>2015-09-21T01:20:42.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\bin\x86\Debug\Slideshow.xr.xml">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\bin\x86\Debug\Slideshow.xr.xml">
       <PackagePath>Slideshow.xr.xml</PackagePath>
       <Modified>2016-12-11T07:05:57.955</Modified>
     </AppxPackagedFile>
@@ -494,13 +494,13 @@
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
       <Modified>2016-12-11T04:36:53.136</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\bin\x86\Debug\resources.pri">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2016-12-11T07:05:59.606</Modified>
+      <Modified>2016-12-11T07:09:11.754</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="P:\Private\Slideshow\src\Slideshow\bin\x86\Debug\Core\Slideshow.exe">
+    <AppxPackagedFile Include="P:\Private\Slideshow\src\bin\x86\Debug\Core\Slideshow.exe">
       <PackagePath>Slideshow.exe</PackagePath>
-      <Modified>2016-12-11T07:06:42.312</Modified>
+      <Modified>2016-12-11T07:09:12.023</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

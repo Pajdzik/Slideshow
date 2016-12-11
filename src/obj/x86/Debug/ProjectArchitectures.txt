@@ -1,1 +1,1 @@
-P:\Private\Slideshow\src\Slideshow\Slideshow.csproj;x86
+P:\Private\Slideshow\src\Slideshow.csproj;x86
