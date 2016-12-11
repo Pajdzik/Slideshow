@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +26,18 @@ namespace Slideshow
         public MainPage()
         {
             this.InitializeComponent();
+            this.InitializeGallery();
+        }
+
+        private void InitializeGallery()
+        {
+            var library = new PhotoLibrary();
+            library.GetAllPhotos().ContinueWith(async task =>
+            {
+                IEnumerable<StorageFile> photos = task.Result;
+                var gallery = new Gallery(this.Dispatcher, photos, this.CurrentImage);
+                gallery.Start();
+            });
         }
     }
 }
