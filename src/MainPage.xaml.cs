@@ -4,6 +4,7 @@ using System.Numerics;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -30,38 +31,67 @@ namespace Slideshow
         {
             this.InitializeComponent();
             this._compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
-            this.InitializeGallery();
 
-            //this.Page_Loaded();
+            this.BlendSelection_SelectionChanged();
+            this.InitializeGallery();
         }
 
         private void InitializeGallery()
         {
             var library = new PhotoLibrary();
-            var gallery = new Gallery(this.Dispatcher, library, this.CurrentImage, this.ProgressRing);
+            var gallery = new Gallery(this.Dispatcher, library, this.CurrentImage, this.BackgroundImage, this.ProgressRing);
             gallery.Start();
         }
 
-        private async void F()
+        private void BlendSelection_SelectionChanged()
         {
-            var file = await Package.Current.InstalledLocation.GetFileAsync("test.png");
-            using (var stream = await file.OpenAsync(FileAccessMode.Read))
-            {
-                var device = new CanvasDevice();
-                var bitmap = await CanvasBitmap.LoadAsync(device, stream);
-                var renderer = new CanvasRenderTarget(device, bitmap.SizeInPixels.Width, bitmap.SizeInPixels.Height, bitmap.Dpi);
+            BlendEffectMode blendmode = BlendEffectMode.Multiply;
 
-                using (var ds = renderer.CreateDrawingSession())
+            // Create a chained effect graph using a BlendEffect, blending color and blur
+            var graphicsEffect = new BlendEffect
+            {
+                Mode = blendmode,
+                Background = new ColorSourceEffect()
                 {
-                    var blur = new GaussianBlurEffect();
-                    blur.BlurAmount = 8.0f;
-                    blur.BorderMode = EffectBorderMode.Hard;
-                    blur.Optimization = EffectOptimization.Quality;
-                    blur.Source = bitmap;
-                    ds.DrawImage(blur);
+                    Name = "Tint",
+                    Color = Color.FromArgb(0, 255, 0, 0),
+                },
+
+                Foreground = new GaussianBlurEffect()
+                {
+                    Name = "Blur",
+                    Source = new CompositionEffectSourceParameter("Backdrop"),
+                    BlurAmount = 100,
+                    BorderMode = EffectBorderMode.Hard,
                 }
-            }
+            };
+
+            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
+                new[] { "Blur.BlurAmount", "Tint.Color" });
+
+            // Create EffectBrush, BackdropBrush and SpriteVisual
+            _brush = blurEffectFactory.CreateBrush();
+
+            var destinationBrush = _compositor.CreateBackdropBrush();
+            _brush.SetSourceParameter("Backdrop", destinationBrush);
+            _brush.Properties.InsertScalar("Blur.BlurAmount", 100);
+
+            var blurSprite = _compositor.CreateSpriteVisual();
+            blurSprite.Size = new Vector2((float)BackgroundImage.ActualWidth, (float)BackgroundImage.ActualHeight);
+            blurSprite.Brush = _brush;
+
+            ElementCompositionPreview.SetElementChildVisual(BackgroundImage, blurSprite);
         }
 
+        private void BackgroundImage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SpriteVisual blurVisual = (SpriteVisual)ElementCompositionPreview.GetElementChildVisual(BackgroundImage);
+
+            if (blurVisual != null)
+            {
+                blurVisual.Size = e.NewSize.ToVector2();
+            }
+
+        }
     }
 }

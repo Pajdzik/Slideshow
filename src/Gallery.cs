@@ -20,6 +20,7 @@ namespace Slideshow
         private readonly Compositor compositor;
         private readonly CoreDispatcher dispatcher;
         private readonly Image image;
+        private readonly Image background;
         private readonly Grid mainGrid;
         private readonly PhotoLibrary photoLibrary;
         private readonly ProgressRing progressRing;
@@ -27,11 +28,12 @@ namespace Slideshow
         private IList<StorageFile> newPhotos;
         private IList<StorageFile> photos;
 
-        public Gallery(CoreDispatcher dispatcher, PhotoLibrary photoLibrary, Image image, ProgressRing progressRing)
+        public Gallery(CoreDispatcher dispatcher, PhotoLibrary photoLibrary, Image image, Image background, ProgressRing progressRing)
         {
             this.dispatcher = dispatcher;
             this.photoLibrary = photoLibrary;
             this.image = image;
+            this.background = background;
             this.progressRing = progressRing;
         }
 
@@ -47,14 +49,15 @@ namespace Slideshow
                         {
                             var bitmap = await this.GetBitmapImage();
                             this.image.Source = bitmap;
+                            this.background.Source = bitmap;
                         });
-                }, TimeSpan.FromSeconds(0.5));
+                }, TimeSpan.FromSeconds(10));
 
             ThreadPoolTimer.CreatePeriodicTimer(async (source) =>
             {
                 await this.dispatcher.RunAsync(CoreDispatcherPriority.High,
                     async () => { await this.LoadImages(); });
-            }, TimeSpan.FromMinutes(0.5));
+            }, TimeSpan.FromHours(1));
         }
 
         private async Task LoadImages()
