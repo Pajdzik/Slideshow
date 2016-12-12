@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Graphics.Display;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
@@ -12,49 +9,65 @@ using Windows.UI.Composition;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 
 namespace Slideshow
 {
     internal class Gallery
     {
+        private readonly GaussianBlurEffect blurEffect;
+        private readonly Compositor compositor;
         private readonly CoreDispatcher dispatcher;
         private readonly Image image;
         private readonly Grid mainGrid;
-        private readonly IList<StorageFile> photos;
-        private readonly IList<StorageFile> newPhotos;
+        private readonly PhotoLibrary photoLibrary;
+        private readonly ProgressRing progressRing;
         private readonly Random random = new Random();
-        private readonly Compositor compositor;
+        private IList<StorageFile> newPhotos;
+        private IList<StorageFile> photos;
 
-        public Gallery(CoreDispatcher dispatcher, IEnumerable<StorageFile> photos, Image image, Grid mainGrid)
+        public Gallery(CoreDispatcher dispatcher, PhotoLibrary photoLibrary, Image image, ProgressRing progressRing)
         {
             this.dispatcher = dispatcher;
-            this.photos = photos.ToList();
+            this.photoLibrary = photoLibrary;
             this.image = image;
-            this.mainGrid = mainGrid;
-            this.newPhotos = this.PickNewPhotos();
-            //this.compositor = ElementCompositionPreview.GetElementVisual(mainGrid).Compositor;
+            this.progressRing = progressRing;
         }
 
-        public void Start()
+        public async void Start()
         {
-            var periodicTimer =
-                ThreadPoolTimer.CreatePeriodicTimer(
-                    async (source) =>
-                    {
-                        await this.dispatcher.RunAsync(CoreDispatcherPriority.High,
-                            async () =>
-                            {
-                                var bitmap = await this.GetBitmapImage();
-                                this.image.Source = bitmap;
+            await this.LoadImages();
 
-                                await this.Foo();
-                            });
-                    }, TimeSpan.FromSeconds(0.5));
+            ThreadPoolTimer.CreatePeriodicTimer(
+                async (source) =>
+                {
+                    await this.dispatcher.RunAsync(CoreDispatcherPriority.High,
+                        async () =>
+                        {
+                            var bitmap = await this.GetBitmapImage();
+                            this.image.Source = bitmap;
+                        });
+                }, TimeSpan.FromSeconds(0.5));
+
+            ThreadPoolTimer.CreatePeriodicTimer(async (source) =>
+            {
+                await this.dispatcher.RunAsync(CoreDispatcherPriority.High,
+                    async () => { await this.LoadImages(); });
+            }, TimeSpan.FromMinutes(0.5));
+        }
+
+        private async Task LoadImages()
+        {
+            this.progressRing.IsActive = true;
+            this.progressRing.Visibility = Visibility.Visible;
+
+            var photoTask = await this.photoLibrary.GetAllPhotos();
+            this.photos = photoTask.ToList();
+            this.newPhotos = this.PickNewPhotos();
+
+            this.progressRing.Visibility = Visibility.Collapsed;
+            this.progressRing.IsActive = false;
         }
 
         private async Task<BitmapImage> GetBitmapImage()

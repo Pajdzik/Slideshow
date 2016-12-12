@@ -10,10 +10,19 @@
 
     <!--  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  -->
     <Grid x:Name="MainGrid">
+        <!--<Image x:Name="BackgroundImage"
+               Source="sample.jpg"
+               Stretch="Fill" />-->
         <Image x:Name="CurrentImage"
                HorizontalAlignment="Center"
                VerticalAlignment="Center"
                Stretch="Uniform" />
+        <ProgressRing x:Name="ProgressRing"
+                      Width="100"
+                      Height="100"
+                      IsActive="True"
+                      Tag="Ladowanie" />
+
         <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal">

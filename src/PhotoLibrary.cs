@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System.Threading;
+using Windows.UI.Core;
 
 namespace Slideshow
 {
@@ -19,7 +21,7 @@ namespace Slideshow
 
             foreach (var subFolder in await folder.GetFoldersAsync())
             {
-                IEnumerable<StorageFile> subFiles = await this.GetPhotosFromFolderAndSubfolders(subFolder);
+                var subFiles = await this.GetPhotosFromFolderAndSubfolders(subFolder);
                 files.AddRange(subFiles);
             }
 
