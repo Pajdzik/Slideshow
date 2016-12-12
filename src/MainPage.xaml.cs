@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Effects;
 using Windows.Storage;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Graphics.Canvas.Effects;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -35,7 +40,7 @@ namespace Slideshow
             library.GetAllPhotos().ContinueWith(async task =>
             {
                 IEnumerable<StorageFile> photos = task.Result;
-                var gallery = new Gallery(this.Dispatcher, photos, this.CurrentImage);
+                var gallery = new Gallery(this.Dispatcher, photos, this.CurrentImage, this.MainGrid);
                 gallery.Start();
             });
         }
