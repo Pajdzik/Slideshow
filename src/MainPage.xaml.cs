@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Windows.System.Display;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
@@ -17,15 +18,17 @@ namespace Slideshow
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private CompositionEffectBrush _brush;
-        private readonly Compositor _compositor;
+        private CompositionEffectBrush brush;
+        private readonly Compositor compositor;
+        private DisplayRequest displayRequest;
 
         public MainPage()
         {
             this.InitializeComponent();
-            this._compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+            this.compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
 
             this.BlendSelection_SelectionChanged();
+            this.ActivateDisplay();
             this.InitializeGallery();
         }
 
@@ -34,6 +37,17 @@ namespace Slideshow
             var library = new PhotoLibrary();
             var gallery = new Gallery(this.Dispatcher, library, this.CurrentImage, this.BackgroundImage, this.ProgressRing);
             gallery.Start();
+        }
+        private void ActivateDisplay()
+        {
+            //create the request instance if needed
+            if (this.displayRequest == null)
+            {
+                this.displayRequest = new DisplayRequest();
+            }
+
+            //make request to put in active state
+            this.displayRequest.RequestActive();
         }
 
         private void BlendSelection_SelectionChanged()
@@ -59,19 +73,19 @@ namespace Slideshow
                 }
             };
 
-            var blurEffectFactory = _compositor.CreateEffectFactory(graphicsEffect,
+            var blurEffectFactory = this.compositor.CreateEffectFactory(graphicsEffect,
                 new[] { "Blur.BlurAmount", "Tint.Color" });
 
             // Create EffectBrush, BackdropBrush and SpriteVisual
-            _brush = blurEffectFactory.CreateBrush();
+            this.brush = blurEffectFactory.CreateBrush();
 
-            var destinationBrush = _compositor.CreateBackdropBrush();
-            _brush.SetSourceParameter("Backdrop", destinationBrush);
-            _brush.Properties.InsertScalar("Blur.BlurAmount", 100);
+            var destinationBrush = this.compositor.CreateBackdropBrush();
+            this.brush.SetSourceParameter("Backdrop", destinationBrush);
+            this.brush.Properties.InsertScalar("Blur.BlurAmount", 100);
 
-            var blurSprite = _compositor.CreateSpriteVisual();
+            var blurSprite = this.compositor.CreateSpriteVisual();
             blurSprite.Size = new Vector2((float)BackgroundImage.ActualWidth, (float)BackgroundImage.ActualHeight);
-            blurSprite.Brush = _brush;
+            blurSprite.Brush = this.brush;
 
             ElementCompositionPreview.SetElementChildVisual(BackgroundImage, blurSprite);
         }

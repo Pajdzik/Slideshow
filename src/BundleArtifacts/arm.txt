@@ -1,0 +1,2 @@
+MainPackage=P:\Private\Slideshow\src\bin\ARM\Release\Slideshow_1.0.2.0_ARM.appx
+SymbolPackage=P:\Private\Slideshow\src\AppPackages\Slideshow_1.0.2.0_Test\Slideshow_1.0.2.0_ARM.appxsym
