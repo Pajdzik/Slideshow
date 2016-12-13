@@ -1,18 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Numerics;
-using Windows.ApplicationModel;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
+﻿using System.Numerics;
 using Windows.UI;
 using Windows.UI.Composition;
-using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Graphics.Canvas;
+using Windows.UI.Xaml.Input;
 using Microsoft.Graphics.Canvas.Effects;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -92,6 +85,20 @@ namespace Slideshow
                 blurVisual.Size = e.NewSize.ToVector2();
             }
 
+        }
+
+        private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (ApplicationView.GetForCurrentView().IsFullScreenMode)
+            {
+                this.FullScreenButton.Symbol = Symbol.FullScreen;
+                ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            }
+            else
+            {
+                this.FullScreenButton.Symbol = Symbol.BackToWindow;
+                ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            }
         }
     }
 }
