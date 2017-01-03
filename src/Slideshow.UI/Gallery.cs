@@ -1,56 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
-using Windows.UI.Composition;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Graphics.Canvas.Effects;
+using Slideshow.Core;
 
 namespace Slideshow
 {
-    internal class Gallery
+    internal class Gallery : INotifyPropertyChanged
     {
-        private readonly GaussianBlurEffect blurEffect;
-        private readonly Compositor compositor;
         private readonly CoreDispatcher dispatcher;
-        private readonly Image image;
-        private readonly Image background;
-        private readonly Grid mainGrid;
         private readonly PhotoLibrary photoLibrary;
-        private readonly ProgressRing progressRing;
         private readonly Random random = new Random();
+        private ImageSource imageSource;
+        private bool isLoading;
         private IList<StorageFile> newPhotos;
         private IList<StorageFile> photos;
 
-        public Gallery(CoreDispatcher dispatcher, PhotoLibrary photoLibrary, Image image, Image background, ProgressRing progressRing)
+        public Gallery(CoreDispatcher dispatcher, PhotoLibrary photoLibrary)
         {
             this.dispatcher = dispatcher;
             this.photoLibrary = photoLibrary;
-            this.image = image;
-            this.background = background;
-            this.progressRing = progressRing;
         }
+
+        public ImageSource ImageSource
+        {
+            get { return this.imageSource; }
+            set
+            {
+                this.imageSource = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public bool IsLoading
+        {
+            get { return this.isLoading; }
+            set
+            {
+                this.isLoading = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public async void Start()
         {
+            this.IsLoading = true;
             await this.LoadImages();
+            this.IsLoading = false;
+
+            await this.ShowPhoto();
 
             ThreadPoolTimer.CreatePeriodicTimer(
                 async (source) =>
                 {
-                    await this.dispatcher.RunAsync(CoreDispatcherPriority.High,
-                        async () =>
-                        {
-                            var bitmap = await this.GetBitmapImage();
-                            this.image.Source = bitmap;
-                            this.background.Source = bitmap;
-                        });
+                    await
+                        this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => { await this.ShowPhoto(); });
                 }, TimeSpan.FromSeconds(10));
 
             ThreadPoolTimer.CreatePeriodicTimer(async (source) =>
@@ -60,17 +74,17 @@ namespace Slideshow
             }, TimeSpan.FromHours(1));
         }
 
+        private async Task ShowPhoto()
+        {
+            var bitmap = await this.GetBitmapImage();
+            this.ImageSource = bitmap;
+        }
+
         private async Task LoadImages()
         {
-            this.progressRing.IsActive = true;
-            this.progressRing.Visibility = Visibility.Visible;
-
             var photoTask = await this.photoLibrary.GetAllPhotos();
             this.photos = photoTask.ToList();
             this.newPhotos = this.PickNewPhotos();
-
-            this.progressRing.Visibility = Visibility.Collapsed;
-            this.progressRing.IsActive = false;
         }
 
         private async Task<BitmapImage> GetBitmapImage()
@@ -86,7 +100,7 @@ namespace Slideshow
             var bitmapImage = new BitmapImage();
             var stream = (FileRandomAccessStream) await file.OpenAsync(FileAccessMode.Read);
 
-            bitmapImage.SetSource(stream);
+            await bitmapImage.SetSourceAsync(stream);
 
             return bitmapImage;
         }
@@ -110,6 +124,11 @@ namespace Slideshow
         private IList<StorageFile> PickNewPhotos()
         {
             return this.photos.OrderByDescending(photo => photo.DateCreated).Take(50).ToList();
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.System.Threading;
-using Windows.UI.Core;
 
-namespace Slideshow
+namespace Slideshow.Core
 {
-    internal class PhotoLibrary
+    public class PhotoLibrary
     {
         public async Task<IEnumerable<StorageFile>> GetAllPhotos()
         {
@@ -27,7 +25,10 @@ namespace Slideshow
 
             foreach (var file in await folder.GetFilesAsync())
             {
-                files.Add(file);
+                if (file.IsAvailable && file.ContentType.StartsWith("image"))
+                {
+                    files.Add(file);
+                }
             }
 
             return files;

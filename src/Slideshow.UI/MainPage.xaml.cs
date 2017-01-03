@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Microsoft.Graphics.Canvas.Effects;
+using Slideshow.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -35,7 +36,8 @@ namespace Slideshow
         private void InitializeGallery()
         {
             var library = new PhotoLibrary();
-            var gallery = new Gallery(this.Dispatcher, library, this.CurrentImage, this.BackgroundImage, this.ProgressRing);
+            var gallery = new Gallery(this.Dispatcher, library);
+            this.DataContext = gallery;
             gallery.Start();
         }
         private void ActivateDisplay()
@@ -98,7 +100,6 @@ namespace Slideshow
             {
                 blurVisual.Size = e.NewSize.ToVector2();
             }
-
         }
 
         private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)

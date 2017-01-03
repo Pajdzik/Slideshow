@@ -5,18 +5,20 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d">
 
-    <Grid x:Name="MainGrid">
+    <Grid>
         <Image x:Name="BackgroundImage"
                SizeChanged="BackgroundImage_SizeChanged"
+               Source="{Binding ImageSource}"
                Stretch="Fill" />
-        <Image x:Name="CurrentImage"
-               HorizontalAlignment="Center"
+        <Image HorizontalAlignment="Center"
                VerticalAlignment="Center"
+               Source="{Binding ImageSource}"
                Stretch="Uniform" />
         <ProgressRing x:Name="ProgressRing"
-                      Width="100"
-                      Height="100"
-                      IsActive="True" />
+                      Width="200"
+                      Height="200"
+                      IsActive="{Binding IsLoading}"
+                      Visibility="Visible" />
 
         <StackPanel HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
