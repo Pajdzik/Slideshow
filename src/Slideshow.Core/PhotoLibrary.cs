@@ -5,7 +5,7 @@ using Windows.Storage;
 
 namespace Slideshow.Core
 {
-    public class PhotoLibrary
+    internal class PhotoLibrary
     {
         public async Task<IEnumerable<StorageFile>> GetAllPhotos()
         {
@@ -25,13 +25,18 @@ namespace Slideshow.Core
 
             foreach (var file in await folder.GetFilesAsync())
             {
-                if (file.IsAvailable && file.ContentType.StartsWith("image"))
+                if (IsProperImage(file))
                 {
                     files.Add(file);
                 }
             }
 
             return files;
+        }
+
+        private static bool IsProperImage(StorageFile file)
+        {
+            return file.IsAvailable && file.ContentType.StartsWith("image");
         }
     }
 }

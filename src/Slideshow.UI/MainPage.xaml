@@ -14,8 +14,7 @@
                VerticalAlignment="Center"
                Source="{Binding ImageSource}"
                Stretch="Uniform" />
-        <ProgressRing x:Name="ProgressRing"
-                      Width="200"
+        <ProgressRing Width="200"
                       Height="200"
                       IsActive="{Binding IsLoading}"
                       Visibility="Visible" />
@@ -35,7 +34,7 @@
                     <Setter Property="Width" Value="60" />
                 </Style>
             </StackPanel.Resources>
-            <Button Tapped="UIElement_OnTapped">
+            <Button Tapped="FullScreenButton_OnTapped">
                 <SymbolIcon x:Name="FullScreenButton" Symbol="FullScreen" />
             </Button>
             <!--<Button>

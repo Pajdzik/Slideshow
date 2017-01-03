@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gallery.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="PhotoLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -10,49 +8,33 @@ using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Slideshow.Core;
+using PropertyChanged;
 
-namespace Slideshow
+namespace Slideshow.Core
 {
-    internal class Gallery : INotifyPropertyChanged
+    [ImplementPropertyChanged]
+    public class GalleryViewModel
     {
         private readonly CoreDispatcher dispatcher;
         private readonly PhotoLibrary photoLibrary;
         private readonly Random random = new Random();
-        private ImageSource imageSource;
-        private bool isLoading;
+
         private IList<StorageFile> newPhotos;
         private IList<StorageFile> photos;
 
-        public Gallery(CoreDispatcher dispatcher, PhotoLibrary photoLibrary)
+        public GalleryViewModel(CoreDispatcher dispatcher)
         {
+            this.photoLibrary = new PhotoLibrary();
             this.dispatcher = dispatcher;
-            this.photoLibrary = photoLibrary;
+            this.Start();
         }
 
-        public ImageSource ImageSource
-        {
-            get { return this.imageSource; }
-            set
-            {
-                this.imageSource = value;
-                this.OnPropertyChanged();
-            }
-        }
+        public ImageSource ImageSource { get; set; }
 
-        public bool IsLoading
-        {
-            get { return this.isLoading; }
-            set
-            {
-                this.isLoading = value;
-                this.OnPropertyChanged();
-            }
-        }
+        public bool IsLoading { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        public async void Start()
+        public async Task Start()
         {
             this.IsLoading = true;
             await this.LoadImages();
@@ -63,8 +45,7 @@ namespace Slideshow
             ThreadPoolTimer.CreatePeriodicTimer(
                 async (source) =>
                 {
-                    await
-                        this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => { await this.ShowPhoto(); });
+                    await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => { await this.ShowPhoto(); });
                 }, TimeSpan.FromSeconds(10));
 
             ThreadPoolTimer.CreatePeriodicTimer(async (source) =>
@@ -124,11 +105,6 @@ namespace Slideshow
         private IList<StorageFile> PickNewPhotos()
         {
             return this.photos.OrderByDescending(photo => photo.DateCreated).Take(50).ToList();
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -30,16 +30,10 @@ namespace Slideshow
 
             this.BlendSelection_SelectionChanged();
             this.ActivateDisplay();
-            this.InitializeGallery();
+
+            this.DataContext = new GalleryViewModel(this.Dispatcher);
         }
 
-        private void InitializeGallery()
-        {
-            var library = new PhotoLibrary();
-            var gallery = new Gallery(this.Dispatcher, library);
-            this.DataContext = gallery;
-            gallery.Start();
-        }
         private void ActivateDisplay()
         {
             //create the request instance if needed
@@ -86,15 +80,15 @@ namespace Slideshow
             this.brush.Properties.InsertScalar("Blur.BlurAmount", 100);
 
             var blurSprite = this.compositor.CreateSpriteVisual();
-            blurSprite.Size = new Vector2((float)BackgroundImage.ActualWidth, (float)BackgroundImage.ActualHeight);
+            blurSprite.Size = new Vector2((float) this.BackgroundImage.ActualWidth, (float) this.BackgroundImage.ActualHeight);
             blurSprite.Brush = this.brush;
 
-            ElementCompositionPreview.SetElementChildVisual(BackgroundImage, blurSprite);
+            ElementCompositionPreview.SetElementChildVisual(this.BackgroundImage, blurSprite);
         }
 
         private void BackgroundImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            SpriteVisual blurVisual = (SpriteVisual)ElementCompositionPreview.GetElementChildVisual(BackgroundImage);
+            SpriteVisual blurVisual = (SpriteVisual)ElementCompositionPreview.GetElementChildVisual(this.BackgroundImage);
 
             if (blurVisual != null)
             {
@@ -102,7 +96,7 @@ namespace Slideshow
             }
         }
 
-        private void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
+        private void FullScreenButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (ApplicationView.GetForCurrentView().IsFullScreenMode)
             {
